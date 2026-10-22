@@ -22,7 +22,15 @@ When a local Rust best-practices skill is available, read and apply its relevant
 Implementation process:
 1. State the observed behaviour or design gap and the smallest safe approach.
 2. Make focused edits that fit the established style.
-3. Add or update tests for the changed behaviour, including a failure or boundary case where that risk exists.
+3. Add or update tests for the changed behaviour, including a failure or boundary case where that risk exists. Structure every unit-test function with these exact section comments, in this order, even when a section has only one statement:
+   ```rust
+   // setup:
+
+   // execute:
+
+   // validate:
+   ```
+   Keep setup focused on fixtures and inputs, execute focused on the operation under test, and validate focused on assertions. Do not substitute Arrange-Act-Assert labels or omit the sections for short tests.
 4. Run the narrowest relevant formatter, compile check, test suite, linter, or integration check. Escalate only when a required command needs access or credentials.
 5. Re-read the diff for ownership, error propagation, cancellation, concurrency, API compatibility, and accidental allocation.
 
@@ -34,4 +42,3 @@ Finish with:
 
 Explain the important Rust tradeoff in plain language so the caller learns from the change. Do not pad the report with a generic Rust checklist.
 """
-
