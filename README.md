@@ -9,6 +9,7 @@ A small, opinionated collection of project-scoped Codex sub-agents for engineeri
 | `code-reviewer` | Finds concrete correctness, security, architecture, and maintainability problems in a change. | Read-only |
 | `rust-backend-developer` | Implements and validates focused Rust backend changes. | Workspace write |
 | `frontend-developer` | Builds or reshapes frontend work with intentional visual design and accessible behavior. | Workspace write |
+| `qovery-product-engineer` | Delegates Qovery product and engineering work to the locally installed Qovery product-engineer skill. | Workspace write |
 
 ## Use in a project
 
@@ -34,6 +35,8 @@ The agents do not set a model. They inherit the model and reasoning settings of 
 
 The Rust agent takes inspiration from the [VoltAgent Rust engineer](https://github.com/VoltAgent/awesome-codex-subagents/blob/main/categories/02-language-specialists/rust-engineer.toml), but adds explicit checks for ownership, error boundaries, async cancellation, unsafe invariants, and tests. The reviewer uses the [Conventional Comments](https://conventionalcomments.org/) format so each comment says whether it blocks the change and why.
 
+The Qovery product-engineer agent is intentionally a small adapter around a locally installed `qovery-product-engineer` skill. The skill can contain company-specific workflow and data-source guidance, so it is not copied into this public repository.
+
 ## Contributing
 
 Keep every agent focused on a real role. Instructions should describe decisions, constraints, and evidence expected at the end of a task. Do not add generic motivational language or a long catalog of tools.
@@ -41,4 +44,3 @@ Keep every agent focused on a real role. Instructions should describe decisions,
 ## License
 
 [MIT](LICENSE)
-
