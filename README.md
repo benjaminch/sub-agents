@@ -1,6 +1,6 @@
 # Codex sub-agents
 
-A small, opinionated collection of project-scoped Codex sub-agents for engineering work. The first three roles are deliberately narrow: a demanding reviewer, a Rust backend developer, and a frontend developer with a design bar.
+A collection of portable Codex sub-agents for engineering work, with a distributed systems architecture toolkit.
 
 ## Agents
 
@@ -10,6 +10,9 @@ A small, opinionated collection of project-scoped Codex sub-agents for engineeri
 | `rust-backend-developer` | Implements and validates focused Rust backend changes. | Workspace write |
 | `frontend-developer` | Builds or reshapes frontend work with intentional visual design and accessible behavior. | Workspace write |
 | `qovery-product-engineer` | Delegates Qovery product and engineering work to the locally installed Qovery product-engineer skill. | Workspace write |
+| `architect` | Compares distributed system designs and writes architecture deliverables. | Workspace write |
+| `architecture-reviewer` | Challenges correctness, consistency, and design tradeoffs. | Read-only |
+| `reliability-reviewer` | Assesses failure recovery, SLOs, capacity, and performance. | Read-only |
 
 ## Use in a project
 
@@ -20,7 +23,7 @@ mkdir -p /path/to/project/.codex/agents
 cp .codex/agents/code-reviewer.toml /path/to/project/.codex/agents/
 ```
 
-Or install all three globally for your local Codex setup:
+Or install the agent definitions globally for your local Codex setup (the architecture agents also need the toolkit skills in the target project):
 
 ```sh
 mkdir -p ~/.codex/agents
@@ -28,6 +31,33 @@ cp .codex/agents/*.toml ~/.codex/agents/
 ```
 
 Then delegate with the agent name and a bounded task. For example: “Use `code-reviewer` to review the diff against `main` and report only actionable findings.”
+
+## Distributed systems architecture toolkit
+
+This is a local implementation of the supplied toolkit description, not a copy of an upstream archive. It includes five self-contained skills in `.agents/skills/`, three architecture agents, and [RFC](docs/architecture/templates/RFC.md), [ADR](docs/architecture/templates/ADR.md), [review](docs/architecture/templates/REVIEW.md), and [failure matrix](docs/architecture/templates/FAILURE-MATRIX.md) templates.
+
+The skills cover system design (`distributed-systems-architect`), independent critique (`architecture-reviewer`), messaging (`event-driven-architecture`), data invariants (`database-consistency`), and failure/capacity analysis (`reliability-performance`). They require explicit assumptions, quantitative reasoning, and validation plans. Architecture tasks produce documents; implementation needs authorization, including authorization already given in the session.
+
+To use the complete toolkit in another repository, inspect existing files for naming conflicts, then copy the five skill directories, three architecture agent definitions, and template directory into matching paths. Preserve the target repository's `AGENTS.md`; this repository's guidance describes maintaining these definitions rather than application architecture policy. Keep skills and templates together: the skills refer to `docs/architecture/templates/` from the target repository root. No additional personal skills are required by these three agents.
+
+Example request:
+
+```text
+Use $distributed-systems-architect to design an order processing platform
+for 2,000 peak requests/second, 99.95% availability, and p99 below 250 ms.
+Ask architecture-reviewer and reliability-reviewer to independently challenge it.
+Produce an RFC, ADR, Mermaid diagram, failure matrix, capacity estimates,
+and implementation roadmap. State assumptions and measurement gaps.
+Do not modify application code or infrastructure without approval.
+```
+
+Run structural validation with Python 3.11 or later:
+
+```sh
+python3 scripts/validate_toolkit.py
+```
+
+Structural validation checks the bundled files, skill metadata, TOML definitions, permissions, and skill references. It does not test Codex discovery, agent delegation, Mermaid rendering, or real-world architecture quality. Those require verification in the consuming Codex environment and against actual workloads. Reviewers return their reports to the caller because their sandbox is read-only; the architect can incorporate them into documents.
 
 ## Design choices
 
